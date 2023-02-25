@@ -1,0 +1,57 @@
+<style>
+  .figma-light body {
+    background-color: white;
+    color: blue;
+  }
+
+  .figma-dark body {
+    background-color: black;
+    color: white;
+  }
+  body {
+    background-color: var(--figma-color-bg);
+    color: var(--figma-color-text);
+  }
+
+  button {
+    background-color: var(--figma-color-bg-brand);
+  }
+
+  :root {
+    height: 480px;
+  }
+</style>
+
+<h2>Namer</h2>
+
+<textarea id="textarea" rows="5" cols="33"></textarea>
+<button id="openai">Hit that shit</button>
+<button id="cancel">Cancel</button>
+<p id="answer">Answer here</p>
+<button id="apply">Apply that shit</button>
+
+<script>
+  const textarea = document.getElementById("textarea");
+
+  const btnSubmit = document.getElementById("openai");
+  btnSubmit.addEventListener("click", () => {
+    const promptText = textarea.value;
+    parent.postMessage(
+      { pluginMessage: { type: "prompt", message: promptText } },
+      "*"
+    );
+  });
+
+  onmessage = (event) => {
+    // console.log("got this from the plugin code", event.data.pluginMessage);
+    document.getElementById("answer").innerHTML = event.data.pluginMessage;
+  };
+
+  document.getElementById("cancel").onclick = () => {
+    parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
+  };
+
+  document.getElementById("apply").onclick = () => {
+    parent.postMessage({ pluginMessage: { type: "apply" } }, "*");
+  };
+</script>

@@ -1,0 +1,22 @@
+{
+  "name": "experiment",
+  "version": "1.0.0",
+  "description": "Your Figma Plugin",
+  "main": "code.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "npm run build -- --watch"
+  },
+  "author": "",
+  "license": "",
+  "devDependencies": {
+    "@figma/plugin-typings": "*",
+    "typescript": "*"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "module-alias": "^2.2.2",
+    "node": "^19.6.1",
+    "openai": "^3.1.0"
+  }
+}
