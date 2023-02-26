@@ -1,14 +1,9 @@
-// import dotenv from "dotenv"
-// import dotenv from "dotenv";
-// dotenv.config();
-// console.log(`Server Run On Port ${process.env.SERVER_PORT}`);
-
 // This file holds the main code for the plugins. It has access to the *document*.
 // You can access browser APIs in the <script> tag inside "ui.html" which has a
 // full browser environment (see documentation).
 
 // This shows the HTML page in "ui.html".
-figma.showUI(__html__, { themeColors: true, height: 480 });
+figma.showUI(__html__, { themeColors: true, height: 320 });
 
 // Some helper stuff
 let reply: string;
@@ -28,7 +23,8 @@ figma.ui.onmessage = (msg) => {
     console.log(promptMsg);
 
     const url = "https://api.openai.com/v1/completions";
-    const apiKey = "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";
+    // Use your own OpenAI API TOKEN
+    const apiKey = "";
 
     const options = {
       method: "POST",
