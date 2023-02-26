@@ -1,26 +1,97 @@
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap"
+  rel="stylesheet"
+/>
+
 <style>
   body {
-    background-color: var(--figma-color-bg);
-    color: var(--figma-color-text);
+    --main-white: #e3e3e3;
+    --secondary-white: #a8a8a8;
+    --main-black: #2c2c2c;
+    --secondary-black: #3e3e3e;
+    --radius: 0.25rem;
+    --padding: 0.5rem;
+    --font: monospace;
+    --font-size: 0.75rem;
+    font-family: var(--font);
+    padding: var(--padding);
   }
 
   button {
-    background-color: var(--figma-color-bg-brand);
+    background-color: var(--main-black);
+    color: var(--main-white);
+    font-family: var(--font);
+    font-size: var(--font-size);
+    padding: 0.5rem;
+    margin-top: 0.75rem;
+    border-radius: var(--radius);
+    border-style: none;
+    border: 1px solid var(--secondary-white);
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: var(--secondary-black);
+  }
+
+  .vertical {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #textarea {
+    background-color: var(--main-black);
+    border-radius: var(--radius);
+    border-style: none;
+    padding: var(--padding);
+    border: 1px solid var(--secondary-white);
+    outline: none;
+    resize: none;
+    overflow: auto;
+    color: var(--main-white);
+  }
+
+  #textarea::placeholder {
+    color: var(--main-white);
+    font-size: var(--font-size);
+  }
+
+  p {
+    color: var(--main-white);
+    font-size: var();
+  }
+
+  .hidden {
+    display: none;
   }
 </style>
 
-<textarea id="textarea" rows="5" cols="33"></textarea>
-<button id="openai">Hit that shit</button>
-<button id="cancel">Cancel</button>
-<p id="answer">Answer here</p>
-<button id="apply">Apply that shit</button>
+<div class="vertical">
+  <textarea
+    id="textarea"
+    name="promptArea"
+    placeholder="Write your prompt here"
+    rows="5"
+    cols="33"
+  ></textarea>
+  <button id="openai">Regenerate response</button>
+</div>
+
+<p id="response" class="hidden" style="margin-top: 1rem"></p>
+<button id="apply" class="hidden" style="margin-top: 0rem">Apply text</button>
+<!-- <button id="cancel">Close</button> -->
 
 <script>
+  let display = false;
+
   const textarea = document.getElementById("textarea");
 
   const btnSubmit = document.getElementById("openai");
   btnSubmit.addEventListener("click", () => {
     const promptText = textarea.value;
+    display = true;
     parent.postMessage(
       { pluginMessage: { type: "prompt", message: promptText } },
       "*"
@@ -29,12 +100,18 @@
 
   onmessage = (event) => {
     // console.log("got this from the plugin code", event.data.pluginMessage);
-    document.getElementById("answer").innerHTML = event.data.pluginMessage;
+    display
+      ? document.getElementById("response").classList.remove("hidden")
+      : document.getElementById("response").classList.add("hidden");
+    display
+      ? document.getElementById("apply").classList.remove("hidden")
+      : document.getElementById("apply").classList.add("hidden");
+    document.getElementById("response").innerHTML = event.data.pluginMessage;
   };
 
-  document.getElementById("cancel").onclick = () => {
-    parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
-  };
+  // document.getElementById("cancel").onclick = () => {
+  //   parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
+  // };
 
   document.getElementById("apply").onclick = () => {
     parent.postMessage({ pluginMessage: { type: "apply" } }, "*");

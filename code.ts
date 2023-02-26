@@ -3,12 +3,16 @@
 // full browser environment (see documentation).
 
 // This shows the HTML page in "ui.html".
-figma.showUI(__html__, { themeColors: true, height: 320 });
+figma.showUI(__html__, { themeColors: true, height: 240 });
 
 // Some helper stuff
 let reply: string;
 const removeNewLinesAndOtherHtmlTags = (text: string) => {
   return text.replace(/(\r\n|\n|\r)/gm, " ");
+};
+
+const removeSpecialCharacters = (text: string) => {
+  return text.replace(/^\s*[\W_]*\s*/, "");
 };
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
@@ -44,6 +48,7 @@ figma.ui.onmessage = (msg) => {
       .then((response) => response.json())
       .then((data) => {
         reply = removeNewLinesAndOtherHtmlTags(data.choices[0].text);
+        reply = removeSpecialCharacters(reply);
         console.log(reply);
         figma.ui.postMessage(reply);
       })
@@ -53,6 +58,7 @@ figma.ui.onmessage = (msg) => {
   if (msg.type === "apply") {
     // console.log(selection.type);
     let selection = figma.currentPage.selection[0];
+    // console.log(selection, reply);
     const myFontLoadingFunction = async () => {
       if (selection.type === "TEXT") {
         await figma.loadFontAsync(selection.fontName as FontName);
